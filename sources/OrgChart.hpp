@@ -17,15 +17,19 @@ namespace ariel{
         //-----Variables-----
         string name;
         vector<Node*> employees;
+        int level;
     public:
         //-----Constructor-----
-        Node(string);
+
+        Node(string,int);
         //-----Getters-----
         string getName();
         vector<Node*> getEmployees();
+        int getLevel();
 
         //-----Functions-----
         void addEmployee(Node*);
+        int size() const;
         //-----Operator_overloading-----
         friend std::ostream &operator<<(std::ostream &o, Node const &c);
 
@@ -41,6 +45,7 @@ namespace ariel{
          Iterator();
          //-----Getters-----
          Node* getCurrent();
+         int size();
          //-----Functions-----
          void addNode(Node*);
          bool hasNext();
@@ -48,10 +53,10 @@ namespace ariel{
 
          //-----Operator_Overloading-----
          Iterator operator++(); //++prefix
-         Node operator*(); //*prefix
+         string operator*(); //*prefix
          friend bool operator==(const Iterator &A,const Iterator  &B);
          friend bool operator!=(const Iterator &A,const Iterator  &B);
-
+         Node const * operator->() const;
 
      };
     /**
@@ -71,6 +76,8 @@ namespace ariel{
         OrgChart add_sub(string,string);
         void BFS_print();
         //-----Iterators_Functions-----
+        Iterator begin();
+        Iterator end();
         Iterator begin_level_order();
         Iterator end_level_order();
         Iterator begin_reverse_order();
@@ -79,9 +86,6 @@ namespace ariel{
         Iterator end_preorder();
         //operator overloading
         friend std::ostream &operator<<(std::ostream &o, OrgChart const &c);
-
-
     };
 }
-
 #endif //ORG_CHART_ORGCHART_HPP

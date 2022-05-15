@@ -10,8 +10,10 @@ namespace ariel {
      * Constructor for the Node class
      * @param name
      */
-    Node::Node(string name) {
-        this->name = name;
+
+    Node::Node(string name, int level) {
+        this->name=name;
+        this->level=level;
     }
 
     /**
@@ -19,6 +21,10 @@ namespace ariel {
      */
     string Node::getName() {
         return name;
+    }
+
+    int Node::getLevel() {
+        return level;
     }
 
     vector<Node *> Node::getEmployees() {
@@ -41,7 +47,7 @@ namespace ariel {
      * Constructor for the OrgChart class
      */
     OrgChart::OrgChart() {
-        boss = new Node("none");
+        boss = new Node("none",0);
     }
     /**
      * Functions for the org chart class
@@ -49,7 +55,7 @@ namespace ariel {
      */
     OrgChart OrgChart::add_root(string name) {
         Node *newBoss;
-        newBoss = new Node(name);
+        newBoss = new Node(name,0);
         boss = newBoss;
         return *this;
     }
@@ -63,7 +69,7 @@ namespace ariel {
      */
     OrgChart OrgChart::add_sub(string father, string child) {
         if (boss->getName() == father) {
-            Node *childNode = new Node(child);
+            Node *childNode = new Node(child,1);
             boss->addEmployee(childNode);
             return *this;
         }
@@ -78,7 +84,7 @@ namespace ariel {
                 Node *p = q.front();
                 q.pop();
                 if (p->getName() == father) {
-                    Node *childNode = new Node(child);
+                    Node *childNode = new Node(child,p->getLevel()+1);
                     p->addEmployee(childNode);
                     return *this;
                 }
@@ -150,8 +156,14 @@ namespace ariel {
         nodes.push_back(node);
     }
 
-    Node Iterator::operator*() {
-        return *nodes[index];
+
+    const Node *Iterator::operator->() const {
+        return this->nodes[index];
+    }
+
+
+    string Iterator::operator*() {
+        return nodes[index]->getName();
     }
 
     Iterator Iterator::operator++() {
@@ -181,7 +193,7 @@ namespace ariel {
         if(root== nullptr){
             return;
         }
-        iterator->addNode(new Node(root->getName()));
+        iterator->addNode(new Node(root->getName(),root->getLevel()));
         for (size_t i = 0; i < root->getEmployees().size(); ++i) {
             DFS(iterator,root->getEmployees()[i]);
         }
@@ -189,7 +201,7 @@ namespace ariel {
     Iterator OrgChart::begin_preorder() {
         Iterator iterator;
         iterator.DFS(&iterator,boss);
-        iterator.addNode(new Node("END"));
+        iterator.addNode(new Node("END",-1));
         return iterator;
 
     }
@@ -198,7 +210,7 @@ namespace ariel {
         Iterator iterator;
         iterator.DFS(&iterator,boss);
 
-        iterator.addNode(new Node("END"));
+        iterator.addNode(new Node("END",-1));
         while (iterator.hasNext()){
             ++iterator;
         }
@@ -208,7 +220,6 @@ namespace ariel {
 
     Iterator OrgChart::begin_level_order() {
         Iterator iterator;
-
 
         if(boss== nullptr){
             return iterator;
@@ -224,18 +235,15 @@ namespace ariel {
                 // Dequeue an item from queue and print it
                 Node *p = q.front();
                 q.pop();
-                iterator.addNode(new Node(p->getName()));
+                iterator.addNode(new Node(p->getName(),p->getLevel()));
 
                 // Enqueue all children of the dequeued item
                 for (size_t i = 0; i < p->getEmployees().size(); i++)
                     q.push(p->getEmployees()[i]);
                 n--;
             }
-
         }
-
-
-        iterator.addNode(new Node("END"));
+        iterator.addNode(new Node("END",-1));
         return iterator;
     }
 
@@ -257,16 +265,15 @@ namespace ariel {
                 // Dequeue an item from queue and print it
                 Node *p = q.front();
                 q.pop();
-                iterator.addNode(new Node(p->getName()));
+                iterator.addNode(new Node(p->getName(),p->getLevel()));
 
                 // Enqueue all children of the dequeued item
                 for (size_t i = 0; i < p->getEmployees().size(); i++)
                     q.push(p->getEmployees()[i]);
                 n--;
             }
-
         }
-        iterator.addNode(new Node("END"));
+        iterator.addNode(new Node("END",-1));
         while (iterator.hasNext()){
             ++iterator;
         }
@@ -279,11 +286,23 @@ namespace ariel {
     }
 
     Iterator OrgChart::reverse_order() {
-        Iterator iterator;
-        return iterator;
+        Iterator reverseIterator=begin_reverse_order();
+
+        while (reverseIterator.hasNext()){
+            ++reverseIterator;
+        }
+        return reverseIterator;
     }
 
+    int Node::size() const{
+        return this->name.length();
+    }
 
+    Iterator OrgChart::begin() {
+        return begin_level_order();
+    }
 
-
+    Iterator OrgChart::end() {
+        return end_level_order();
+    }
 }
