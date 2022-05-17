@@ -20,7 +20,6 @@ namespace ariel{
         int level;
     public:
         //-----Constructor-----
-
         Node(string,int);
         //-----Getters-----
         string getName();
@@ -67,10 +66,13 @@ namespace ariel{
     class OrgChart{
         //-----Variables-----
         Node* boss;
+        Node* endNode;
 
     public:
         //-----Constructors-----
         OrgChart();
+        //-----Destructor-----
+        ~OrgChart();
         //-----Functions-----
         OrgChart add_root(string);
         OrgChart add_sub(string,string);

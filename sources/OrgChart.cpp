@@ -48,6 +48,7 @@ namespace ariel {
      */
     OrgChart::OrgChart() {
         boss = new Node("none",0);
+        endNode=new Node("END",-1);
     }
     /**
      * Functions for the org chart class
@@ -201,7 +202,7 @@ namespace ariel {
     Iterator OrgChart::begin_preorder() {
         Iterator iterator;
         iterator.DFS(&iterator,boss);
-        iterator.addNode(new Node("END",-1));
+        iterator.addNode(endNode);
         return iterator;
 
     }
@@ -210,7 +211,7 @@ namespace ariel {
         Iterator iterator;
         iterator.DFS(&iterator,boss);
 
-        iterator.addNode(new Node("END",-1));
+        iterator.addNode(endNode);
         while (iterator.hasNext()){
             ++iterator;
         }
@@ -235,7 +236,7 @@ namespace ariel {
                 // Dequeue an item from queue and print it
                 Node *p = q.front();
                 q.pop();
-                iterator.addNode(new Node(p->getName(),p->getLevel()));
+                iterator.addNode(p);
 
                 // Enqueue all children of the dequeued item
                 for (size_t i = 0; i < p->getEmployees().size(); i++)
@@ -243,7 +244,7 @@ namespace ariel {
                 n--;
             }
         }
-        iterator.addNode(new Node("END",-1));
+        iterator.addNode(endNode);
         return iterator;
     }
 
@@ -265,7 +266,7 @@ namespace ariel {
                 // Dequeue an item from queue and print it
                 Node *p = q.front();
                 q.pop();
-                iterator.addNode(new Node(p->getName(),p->getLevel()));
+                iterator.addNode(p);
 
                 // Enqueue all children of the dequeued item
                 for (size_t i = 0; i < p->getEmployees().size(); i++)
@@ -273,7 +274,7 @@ namespace ariel {
                 n--;
             }
         }
-        iterator.addNode(new Node("END",-1));
+        iterator.addNode(endNode);
         while (iterator.hasNext()){
             ++iterator;
         }
@@ -305,5 +306,12 @@ namespace ariel {
 
     Iterator OrgChart::end() {
         return end_level_order();
+    }
+    OrgChart::~OrgChart() {
+        for (auto it = begin_reverse_order(); it != reverse_order(); ++it)
+        {
+            //cout<<"gay";
+            //delete (it.getCurrent());
+        }
     }
 }
