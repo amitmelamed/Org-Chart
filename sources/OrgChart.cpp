@@ -282,6 +282,7 @@ namespace ariel {
 
     Iterator OrgChart::begin_reverse_order() {
         Iterator iterator;
+        iterator= this->begin_level_order();
         return iterator;
     }
 
