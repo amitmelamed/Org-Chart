@@ -4,45 +4,12 @@
 #include <bits/stdc++.h>
 #include "OrgChart.hpp"
 
+/**
+* This OrgChart file contains the implementation of the OrgChart class,
+*/
+
 using namespace std;
 namespace ariel {
-    /**
-     * Constructor for the Node class
-     * @param name
-     */
-
-    Node::Node(string name, int level) {
-        this->name=name;
-        this->level=level;
-    }
-
-    /**
-     * Getters for the Node Class
-     */
-    string Node::getName() {
-        return name;
-    }
-
-    int Node::getLevel() {
-        return level;
-    }
-
-    vector<Node *> Node::getEmployees() {
-        return employees;
-    }
-
-    std::ostream &operator<<(std::ostream &o, Node const &node){
-        o<<node.name;
-        return o;
-    }
-
-    /**
-     * Functions for the Node Class
-     */
-    void Node::addEmployee(Node *newNode) {
-        employees.push_back(newNode);
-    }
-
     /**
      * Constructor for the OrgChart class
      */
@@ -51,13 +18,45 @@ namespace ariel {
         endNode=new Node("END",-1);
     }
     /**
+     * Copy Constructor
+     * @param chart
+     */
+    OrgChart::OrgChart(const OrgChart &chart) {
+        boss=chart.boss;
+        endNode=chart.endNode;
+    }
+
+    /**
      * Functions for the org chart class
      * add root-adding a new root to the tree
      */
-    OrgChart OrgChart::add_root(string name) {
-        Node *newBoss;
-        newBoss = new Node(name,0);
-        boss = newBoss;
+
+
+    /**
+    * Deconstructor using reverse BFS algorithm
+    */
+    OrgChart::~OrgChart() {
+
+        vector<Node*> stack;
+        list<Node*> queue;
+
+        queue.push_back(boss);
+        Node* curr = nullptr;
+        while (queue.size()){
+            curr=queue.front();
+            queue.pop_front();
+            stack.push_back(curr);
+            for (size_t i = 0; i < curr->getEmployees().size(); i++) {
+                queue.push_back(curr->getEmployees()[curr->getEmployees().size()-1-i]);
+            }
+        }
+        for (size_t i = 0; i < stack.size(); ++i) {
+            delete stack[stack.size()-i-1];
+        }
+        delete endNode;
+    }
+    OrgChart& OrgChart::add_root(string name) {
+        boss = new Node(name,0);
         return *this;
     }
     /**
@@ -68,7 +67,7 @@ namespace ariel {
      * @param child
      * @return
      */
-    OrgChart OrgChart::add_sub(string father, string child) {
+    OrgChart& OrgChart::add_sub(string father, string child) {
         if (boss->getName() == father) {
             Node *childNode = new Node(child,1);
             boss->addEmployee(childNode);
@@ -133,72 +132,15 @@ namespace ariel {
     }
 
     /**
-     * Constructor for the Iterator class
+     * Iterators traversal:
+     * Each Algorithm has begin and end Iterator Creator
+     * The traversal used:
+     * Pre-order - using DFS algorithm
+     * Level-order - using BFS algorithm
+     * Reverse_order - using BFS with stack instead of queue,
+     * and going from right leafs to left.
+     * @return
      */
-    Iterator::Iterator() {
-        index=0;
-    }
-
-    Node *Iterator::getCurrent() {
-        if(index>=nodes.size()){
-            throw runtime_error("Index out of range");
-        }
-        return nodes[index];
-    }
-
-    bool Iterator::hasNext() {
-        if(index>=nodes.size()-1){
-            return false;
-        }
-        return true;
-    }
-
-    void Iterator::addNode(Node * node) {
-        nodes.push_back(node);
-    }
-
-
-    const Node *Iterator::operator->() const {
-        return this->nodes[index];
-    }
-
-
-    string Iterator::operator*() {
-        return nodes[index]->getName();
-    }
-
-    Iterator Iterator::operator++() {
-        if(index<nodes.size()){
-            index++;
-            return *this;
-        }
-        else
-        {
-            throw runtime_error("Index out of range");
-        }
-
-    }
-    bool operator==(const Iterator &A,const Iterator  &B){
-        if(A.nodes.size()==0||B.nodes.size()==0){
-            throw runtime_error("Iterators are empty");
-        }
-        if(A.nodes[A.index]->getName()==B.nodes[B.index]->getName())
-            return true;
-        return false;
-    }
-    bool operator!=(const Iterator &A,const Iterator  &B){
-        return !(A==B);
-    }
-
-    void Iterator::DFS(Iterator* iterator,Node* root) {
-        if(root== nullptr){
-            return;
-        }
-        iterator->addNode(new Node(root->getName(),root->getLevel()));
-        for (size_t i = 0; i < root->getEmployees().size(); ++i) {
-            DFS(iterator,root->getEmployees()[i]);
-        }
-    }
     Iterator OrgChart::begin_preorder() {
         Iterator iterator;
         iterator.DFS(&iterator,boss);
@@ -283,23 +225,49 @@ namespace ariel {
 
     Iterator OrgChart::begin_reverse_order() {
         Iterator iterator;
-        iterator= this->begin_level_order();
+        if(boss== nullptr){
+            return iterator;
+        }
+        vector<Node*> stack;
+        list<Node*> queue;
+
+        queue.push_back(boss);
+        Node* curr = nullptr;
+        while (queue.size()){
+            curr=queue.front();
+            queue.pop_front();
+            stack.push_back(curr);
+            for (size_t i = 0; i < curr->getEmployees().size(); i++) {
+                queue.push_back(curr->getEmployees()[curr->getEmployees().size()-1-i]);
+            }
+        }
+        for (size_t i = 0; i < stack.size(); ++i) {
+            iterator.addNode(stack[stack.size()-i-1]);
+        }
+
+        iterator.addNode(endNode);
+
         return iterator;
     }
 
     Iterator OrgChart::reverse_order() {
         Iterator reverseIterator=begin_reverse_order();
 
+        reverseIterator.addNode(endNode);
         while (reverseIterator.hasNext()){
             ++reverseIterator;
         }
+
         return reverseIterator;
     }
 
-    int Node::size() const{
-        return this->name.length();
-    }
 
+
+    /**
+     * begin and end function to be able to iterate:
+     * for (auto element : organization)
+     * @return
+     */
     Iterator OrgChart::begin() {
         return begin_level_order();
     }
@@ -307,11 +275,5 @@ namespace ariel {
     Iterator OrgChart::end() {
         return end_level_order();
     }
-    OrgChart::~OrgChart() {
-        for (auto it = begin_reverse_order(); it != reverse_order(); ++it)
-        {
-            //cout<<"gay";
-            //delete (it.getCurrent());
-        }
-    }
+
 }
