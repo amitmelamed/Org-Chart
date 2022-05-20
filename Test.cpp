@@ -48,9 +48,63 @@ TEST_CASE("Add root and sub input"){
     organization.add_root("CEO");
     CHECK_THROWS(organization.add_sub("Not_CEO","Amit"));//only CEO in the tree
     CHECK_THROWS(organization.add_sub("Amit","Amit"));//Amit not in the tree
-    CHECK_THROWS(organization.add_sub("Melamed","Melamed"));
+    CHECK_THROWS(organization.add_sub("Melamed","CFO"));
     CHECK_NOTHROW(organization.add_sub("CEO","Amit"));
-    CHECK_NOTHROW(organization.add_sub("Amit","Melamed"));
+    CHECK_NOTHROW(organization.add_sub("Amit","TUF"));
+    CHECK_NOTHROW(organization.add_sub("CEO","Melamed"));
 
 
+    vector<string> names_level_order={"CEO",  "Amit" , "Melamed",  "TUF"};
+    vector<string> names_pre_order={"CEO","Amit","TUF","Melamed"};
+    vector<string> names_reverse_order={"TUF", "Amit", "Melamed", "CEO"};
+
+
+size_t i=0;
+    for (auto it = organization.begin_level_order(); it != organization.end_level_order(); ++it)
+    {
+        CHECK_EQ(names_level_order[i],(*it));
+        i++;
+    }
+
+    i=0;
+    for (auto it=organization.begin_preorder(); it!=organization.end_preorder(); ++it) {
+        CHECK_EQ(names_pre_order[i],(*it));
+        i++;
+    }
+    i=0;
+
+    for (auto it = organization.begin_reverse_order(); it != organization.reverse_order(); ++it)
+    {
+        CHECK_EQ(names_reverse_order[i],(*it));
+        i++;
+    }
+}
+
+TEST_CASE("Comparing two iterators"){
+    OrgChart organization;
+    organization.add_root("CEO");
+    CHECK_THROWS(organization.add_sub("Not_CEO","Amit"));//only CEO in the tree
+    CHECK_THROWS(organization.add_sub("Amit","Amit"));//Amit not in the tree
+    CHECK_THROWS(organization.add_sub("Melamed","CFO"));
+    CHECK_NOTHROW(organization.add_sub("CEO","Amit"));
+    CHECK_NOTHROW(organization.add_sub("Amit","TUF"));
+    CHECK_NOTHROW(organization.add_sub("CEO","Melamed"));
+
+    Iterator pre_order=organization.begin_preorder();
+    for (auto it=organization.begin_preorder(); it!=organization.end_preorder(); ++it) {
+        CHECK_EQ(it,pre_order);
+        ++pre_order;
+    }
+
+    Iterator level_order=organization.begin_level_order();
+    for (auto it = organization.begin_level_order(); it != organization.end_level_order(); ++it){
+        CHECK_EQ(it,level_order);
+        ++level_order;
+    }
+
+    Iterator reverse_order=organization.begin_reverse_order();
+    for (auto it = organization.begin_reverse_order(); it != organization.reverse_order(); ++it){
+        CHECK_EQ(it,reverse_order);
+        ++reverse_order;
+    }
 }

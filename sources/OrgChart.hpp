@@ -33,14 +33,14 @@ namespace ariel{
         OrgChart& add_sub(string,string);
         void BFS_print();
         //-----Iterators_Functions-----
-        Iterator begin();
-        Iterator end();
-        Iterator begin_level_order();
-        Iterator end_level_order();
-        Iterator begin_reverse_order();
-        Iterator reverse_order();
-        Iterator begin_preorder();
-        Iterator end_preorder();
+        Iterator begin() const;
+        Iterator end() const;
+        Iterator begin_level_order() const;
+        Iterator end_level_order() const;
+        Iterator begin_reverse_order() const;
+        Iterator reverse_order() const;
+        Iterator begin_preorder() const;
+        Iterator end_preorder() const;
         //operator overloading
         friend std::ostream &operator<<(std::ostream &o, OrgChart const &c);
 

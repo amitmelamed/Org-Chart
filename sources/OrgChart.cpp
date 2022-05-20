@@ -14,7 +14,7 @@ namespace ariel {
      * Constructor for the OrgChart class
      */
     OrgChart::OrgChart() {
-        boss = new Node("none",0);
+        boss = nullptr;
         endNode=new Node("END",-1);
     }
     /**
@@ -135,13 +135,13 @@ namespace ariel {
      * Iterators traversal:
      * Each Algorithm has begin and end Iterator Creator
      * The traversal used:
-     * Pre-order - using DFS algorithm
+     * Pre-order - using Pre order algorithm
      * Level-order - using BFS algorithm
      * Reverse_order - using BFS with stack instead of queue,
      * and going from right leafs to left.
      * @return
      */
-    Iterator OrgChart::begin_preorder() {
+    Iterator OrgChart::begin_preorder() const {
         Iterator iterator;
         iterator.DFS(&iterator,boss);
         iterator.addNode(endNode);
@@ -149,7 +149,7 @@ namespace ariel {
 
     }
 
-    Iterator OrgChart::end_preorder() {
+    Iterator OrgChart::end_preorder() const{
         Iterator iterator;
         iterator.DFS(&iterator,boss);
 
@@ -161,7 +161,7 @@ namespace ariel {
 
     }
 
-    Iterator OrgChart::begin_level_order() {
+    Iterator OrgChart::begin_level_order() const{
         Iterator iterator;
 
         if(boss== nullptr){
@@ -190,7 +190,7 @@ namespace ariel {
         return iterator;
     }
 
-    Iterator OrgChart::end_level_order() {
+    Iterator OrgChart::end_level_order() const{
         Iterator iterator;
 
 
@@ -223,7 +223,7 @@ namespace ariel {
         return iterator;
     }
 
-    Iterator OrgChart::begin_reverse_order() {
+    Iterator OrgChart::begin_reverse_order() const{
         Iterator iterator;
         if(boss== nullptr){
             return iterator;
@@ -250,7 +250,7 @@ namespace ariel {
         return iterator;
     }
 
-    Iterator OrgChart::reverse_order() {
+    Iterator OrgChart::reverse_order() const{
         Iterator reverseIterator=begin_reverse_order();
 
         reverseIterator.addNode(endNode);
@@ -268,11 +268,11 @@ namespace ariel {
      * for (auto element : organization)
      * @return
      */
-    Iterator OrgChart::begin() {
+    Iterator OrgChart::begin() const{
         return begin_level_order();
     }
 
-    Iterator OrgChart::end() {
+    Iterator OrgChart::end() const{
         return end_level_order();
     }
 
