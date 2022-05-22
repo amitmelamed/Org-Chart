@@ -16,21 +16,21 @@ namespace ariel {
      */
 
     Node::Node(string name, int level) {
-        this->name=name;
+        this->name=std::move(name);
         this->level=level;
     }
     /**
      * Getters for the Node Class
      */
-    string Node::getName() {
+    string Node::getName() const{
         return name;
     }
 
-    int Node::getLevel() {
+    int Node::getLevel() const {
         return level;
     }
 
-    vector<Node *> Node::getEmployees() {
+    vector<Node *> Node::getEmployees() const{
         return employees;
     }
     int Node::size() const{

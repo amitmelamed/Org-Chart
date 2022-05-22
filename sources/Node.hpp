@@ -21,15 +21,15 @@ namespace ariel{
         //-----Constructors-----
         Node(string,int);
         //-----Getters-----
-        string getName();
-        vector<Node*> getEmployees();
-        int getLevel();
+        string getName() const;
+        vector<Node*> getEmployees() const;
+        int getLevel() const;
 
         //-----Functions-----
         void addEmployee(Node*);
         int size() const;
         //-----Operator_overloading-----
-        friend std::ostream &operator<<(std::ostream &o, Node const &c);
+        friend std::ostream &operator<<(std::ostream &o, Node const &node);
 
     };
 }

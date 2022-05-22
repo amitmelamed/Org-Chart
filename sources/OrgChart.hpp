@@ -30,7 +30,7 @@ namespace ariel{
         ~OrgChart();
         //-----Functions-----
         OrgChart& add_root(string);
-        OrgChart& add_sub(string,string);
+        OrgChart& add_sub(string const &,string const &);
         void BFS_print();
         //-----Iterators_Functions-----
         Iterator begin() const;
