@@ -62,7 +62,7 @@ namespace ariel {
     }
 
     string Iterator::operator*() {
-        return nodes[index]->getName();
+        return this->nodes[index]->getName();
     }
 
     Iterator Iterator::operator++() {

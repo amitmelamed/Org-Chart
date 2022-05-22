@@ -24,10 +24,13 @@ namespace ariel{
         string getName() const;
         vector<Node*> getEmployees() const;
         int getLevel() const;
-
+        //-----Setters-----
+        void setName(string);
         //-----Functions-----
         void addEmployee(Node*);
         int size() const;
+        int length() const;
+        char at(size_t) const;
         //-----Operator_overloading-----
         friend std::ostream &operator<<(std::ostream &o, Node const &node);
 

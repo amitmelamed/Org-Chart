@@ -37,6 +37,18 @@ namespace ariel {
         return this->name.length();
     }
 
+    int Node::length() const {
+        return name.length();
+    }
+
+    char Node::at(size_t n) const {
+        return name.at(n);
+    }
+
+    void Node::setName(string name) {
+        this->name=std::move(name);
+    }
+
     /**
      * Operator overriding
      * << returns the Node's name

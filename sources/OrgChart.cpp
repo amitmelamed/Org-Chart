@@ -62,24 +62,10 @@ namespace ariel {
     }
 
     OrgChart &OrgChart::add_root(string name) {
-        //if we are adding new root over other root, we will delete the previous tree using BFS
+        //if we are adding new root over other root, we will just change the root name
         if(boss!= nullptr){
-            vector < Node * > stack;
-            list < Node * > queue;
-
-            queue.push_back(boss);
-            Node *curr = nullptr;
-            while (!queue.empty()) {
-                curr = queue.front();
-                queue.pop_front();
-                stack.push_back(curr);
-                for (size_t i = 0; i < curr->getEmployees().size(); i++) {
-                    queue.push_back(curr->getEmployees()[curr->getEmployees().size() - 1 - i]);
-                }
-            }
-            for (size_t i = 0; i < stack.size(); ++i) {
-                delete stack[stack.size() - i - 1];
-            }
+            boss->setName(name);
+            return *this;
         }
 
         boss = new Node(std::move(name), 0);
