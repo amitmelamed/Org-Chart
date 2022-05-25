@@ -26,6 +26,12 @@ namespace ariel{
         //-----Constructors-----
         OrgChart();
         OrgChart(const OrgChart&);
+
+
+        OrgChart(OrgChart& org) = default;
+        OrgChart(OrgChart&& org) = default;
+        OrgChart& operator=(OrgChart&&) = default;
+        OrgChart& operator=(const OrgChart& org) = default;
         //-----Destructor-----
         ~OrgChart();
         //-----Functions-----
